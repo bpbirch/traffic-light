@@ -19,6 +19,9 @@ fastapi = "0.109.2"
 uvicorn = "0.23.2"
 fastapi-pagination = "0.12.7"
 
+[tool.poetry.group.dev.dependencies]
+commitizen = "2.42.1"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
