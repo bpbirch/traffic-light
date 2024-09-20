@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "traffic-light"
+version = "0.1.0"
+description = "Traffic light coding exercise for Comcast-Databee"
+authors = ["bpbirch <brendanpbirch@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "traffic_light"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+# pydantic dependencies
+pydantic = {extras = ["dotenv"], version = ">=2.1.1,<=2.6.1"}
+pydantic-settings = "2.1.0"
+
+# FastAPI dependencies
+fastapi = "0.109.2"
+uvicorn = "0.23.2"
+fastapi-pagination = "0.12.7"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+dependency-injector = "4.40.0"
+
+
+[tool.poetry.dev-dependencies]
+taskipy = "1.10.3"
+python-semantic-release = "7.33.2"
+coverage = "7.2.7"
+pytest = "7.3.1"
+black = "23.1.0"
+mypy = "1.7.0"
+isort = "5.12.0"
+autoflake = "2.0.2"
+flake8 = "6.0.0"
+pytest-cov = "4.1.0"

@@ -1,0 +1,7 @@
+# secrets
+**.env
+
+# caches
+**__pycache__**
+**.cache/v/cache
+**.mypy_cache
