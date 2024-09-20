@@ -18,6 +18,7 @@ pydantic-settings = "2.1.0"
 fastapi = "0.109.2"
 uvicorn = "0.23.2"
 fastapi-pagination = "0.12.7"
+dependency-injector = "4.40.0"
 
 [tool.poetry.group.dev.dependencies]
 commitizen = "2.42.1"
@@ -39,3 +40,15 @@ isort = "5.12.0"
 autoflake = "2.0.2"
 flake8 = "6.0.0"
 pytest-cov = "4.1.0"
+
+[tool.taskipy.tasks]
+mypy = { cmd = "mypy --config-file mypy.ini --junit-xml _mypy.xml --show-traceback", help = "Run code quality tests" }
+flake8ci = { cmd = "flake8 traffic_light tests --format junit-xml --output-file flake8.xml --count", help = "Run code quality tests" }
+flake8 = { cmd = "flake8 traffic_light tests", help = "Run code quality tests" }
+autoflake = { cmd = "autoflake --in-place --remove-all-unused-imports --remove-unused-variables --ignore-pass-statements --ignore-init-module-imports --recursive traffic_light tests", help = "Run autoflake tool" }
+isort = { cmd = "isort traffic_light tests", help = "Sort imports" }
+format = { cmd = "black traffic_light tests", help = "Run black code formatting" }
+tests = { cmd = "pytest -s tests", help = "run pytest tests"}
+unit = { cmd = "pytest -s tests/unit", help = "run pytest unit tests" }
+e2e = { cmd = "pytest -s tests/e2e", help = "run pytest e2e tests" }
+int = { cmd = "pytest -s tests/integration", help = "run pytest integration tests" }
