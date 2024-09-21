@@ -19,7 +19,7 @@ agents_router = APIRouter(
 @inject
 async def upsert_traffic_light(
     request: Request,  # the request param will get used if we want to introduce an auth decorator
-    traffic_light: models.BaseTrafficLight,
+    traffic_light: models.BaseTrafficLightHTTP,
     uow: AbstractTrafficLightUnitOfWork = Depends(Provide[Container.uow]),
 ) -> uuid.UUID:
     try:
@@ -36,7 +36,7 @@ async def get_traffic_light(
     request: Request,  # the request param will get used if we want to introduce an auth decorator
     light_id: uuid.UUID,
     uow: AbstractTrafficLightUnitOfWork = Depends(Provide[Container.uow]),
-) -> models.BaseTrafficLight:
+) -> models.BaseTrafficLightHTTP:
     try:
         return await traffic_service_layer.get_traffic_light(light_id=light_id, uow=uow)
     except traffic_exceptions.TrafficLightNotFoundException:

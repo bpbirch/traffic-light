@@ -4,11 +4,12 @@ import uuid
 
 
 async def upsert_traffic_light(
-    traffic_light: models.BaseTrafficLight,
+    traffic_light: models.BaseTrafficLightHTTP,
     uow: AbstractTrafficLightUnitOfWork
 ) -> uuid.UUID:
     async with uow:
-        light_id = await uow.traffic_light_repository.upsert_traffic_light(traffic_light)
+        sl_model = models.TrafficLightServiceLayerModel(**traffic_light.model_dump())
+        light_id = await uow.traffic_light_repository.upsert_traffic_light(sl_model)
         await uow.commit()
     return light_id
 
@@ -16,6 +17,7 @@ async def upsert_traffic_light(
 async def get_traffic_light(
     light_id: uuid.UUID,
     uow: AbstractTrafficLightUnitOfWork,
-) -> models.BaseTrafficLight:
+) -> models.BaseTrafficLightHTTP:
     async with uow:
-        return await uow.traffic_light_repository.get_traffic_light(light_id)
+        sl_model = await uow.traffic_light_repository.get_traffic_light(light_id)
+        return sl_model.to_pydantic()
