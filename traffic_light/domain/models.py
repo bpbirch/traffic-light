@@ -1,7 +1,7 @@
 import abc
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from enum import Enum
-from typing import Any, List, Optional
+from typing import Any, List, Optional, cast
 import datetime
 import uuid
 import traffic_light.domain.exceptions as traffic_exceptions
@@ -21,7 +21,12 @@ class SupportedSystem(str, Enum):
     based on supported systems (party lights, traffic lights, airport control lights, etc.)
 
     """
+
     TRAFFIC_LIGHT = "TRAFFIC LIGHT"
+
+
+class SupportedLightType(str, Enum):
+    STANDARD = "STANDARD"
 
 
 def generate_uuid() -> uuid.UUID:
@@ -48,6 +53,7 @@ class HasTimeStamps(BaseModel):
         json_encoders={datetime.datetime: lambda v: v.isoformat()}
     )
 
+
 # class SpeedBasedTrafficHandler(BaseModel):
 #     """potentially use this model to generate TrafficLight objects with times, based on speed
 
@@ -57,15 +63,21 @@ class HasTimeStamps(BaseModel):
 
 
 class BaseTrafficLightHTTP(HasUUID, HasTimeStamps):
-    supported_systems: List[SupportedSystem] = Field(default=[SupportedSystem.TRAFFIC_LIGHT])
-    supported_colors: List[SupportedColor] = Field(default=[SupportedColor.GREEN, SupportedColor.YELLOW, SupportedColor.RED])
+    supported_systems: List[SupportedSystem] = Field(
+        default=[SupportedSystem.TRAFFIC_LIGHT]
+    )
+    supported_colors: List[SupportedColor] = Field(
+        default=[SupportedColor.GREEN, SupportedColor.YELLOW, SupportedColor.RED]
+    )
+    supported_light_type: SupportedLightType = Field(
+        default=SupportedLightType.STANDARD
+    )
     green_time: int = Field(default=60)
     yellow_time: int = Field(default=6)
     red_time: int = Field(default=120)
     # cycle_repeat_amount would be used if we wanted to use multiple TrafficLight objects
     # to create a pattern throughout the day
     cycle_repeat_amount: Optional[int] = Field(default=None)
-    repeat_indefinitely: Optional[bool] = Field(default=True)
     signal_count: Optional[int] = Field(default=0)
 
     @model_validator(mode="before")
@@ -89,27 +101,31 @@ class BaseTrafficLightHTTP(HasUUID, HasTimeStamps):
         yellow_time = data.get("yellow_time")
         red_time = data.get("red_time")
         cycle_repeat_amount = data.get("cycle_repeat_amount")
-        for color, timer in [("green_time", green_time), ("yellow_time", yellow_time), ("red_time", red_time)]:
+        for color, timer in [
+            ("green_time", green_time),
+            ("yellow_time", yellow_time),
+            ("red_time", red_time),
+        ]:
             if not isinstance(timer, int):
                 raise traffic_exceptions.HTTPTrafficLightValidationException(
-                    f'{color} must be an instance of int, but type {type(timer)} was passed.'
+                    f"{color} must be an instance of int, but type {type(timer)} was passed."
                 )
             if timer < 0:
                 raise traffic_exceptions.HTTPTrafficLightValidationException(
-                    f'{color} must be greater than zero, but {timer} was passed'
+                    f"{color} must be greater than zero, but {timer} was passed"
                 )
         if green_time + yellow_time + red_time <= 0:
             raise traffic_exceptions.HTTPTrafficLightValidationException(
-                'total times for green, yellow, and red times must be greater than zero'
+                "total times for green, yellow, and red times must be greater than zero"
             )
         if cycle_repeat_amount is not None:
             if not isinstance(cycle_repeat_amount, int):
                 raise traffic_exceptions.HTTPTrafficLightValidationException(
-                    f'cycle_repeat_amount must be instance of int, but type {type(cycle_repeat_amount)} was passed.'
+                    f"cycle_repeat_amount must be instance of int, but type {type(cycle_repeat_amount)} was passed."
                 )
             if cycle_repeat_amount < 0:
                 raise traffic_exceptions.HTTPTrafficLightValidationException(
-                    f'cycle_repeat_amount must be greater than zero, but {cycle_repeat_amount} was passed'
+                    f"cycle_repeat_amount must be greater than zero, but {cycle_repeat_amount} was passed"
                 )
         return data
 
@@ -118,6 +134,7 @@ class BaseFlashingTrafficLightHTTP(BaseTrafficLightHTTP):
     """
     This model is used for traffic signals that involve a flashing light component for one or more colors
     """
+
     green_flash_time: Optional[int] = Field(default=0)
     yellow_flash_time: Optional[int] = Field(default=0)
     red_flash_time: Optional[int] = Field(default=0)
@@ -137,21 +154,21 @@ class BaseFlashingTrafficLightHTTP(BaseTrafficLightHTTP):
         for color, flash_timer, color_timer in [
             ("green_flash_time", green_flash_time, green_time),
             ("yellow_flash_time", yellow_flash_time, yellow_time),
-            ("red_flash_time", red_flash_time, red_time)
+            ("red_flash_time", red_flash_time, red_time),
         ]:
             if not isinstance(flash_timer, int):
                 raise traffic_exceptions.TrafficLightValidationException(
-                    f'{color} must be an instance of int, but type {type(flash_timer)} was passed.'
+                    f"{color} must be an instance of int, but type {type(flash_timer)} was passed."
                 )
             if flash_timer < 0:
                 raise traffic_exceptions.TrafficLightValidationException(
-                    f'{color} must be greater than zero, but {flash_timer} was passed'
+                    f"{color} must be greater than zero, but {flash_timer} was passed"
                 )
             # following validation is because a flash timer for a color must be less than the total time for that color
             # eg a light can't flash green for longer than the light remains green
             if flash_timer > color_timer:
                 raise traffic_exceptions.TrafficLightValidationException(
-                    f'flash_timer must be less than color_timer, but for color {color}, flash_timer {flash_timer} is greater than {color_timer}'
+                    f"flash_timer must be less than color_timer, but for color {color}, flash_timer {flash_timer} is greater than {color_timer}"
                 )
 
         return data
@@ -159,6 +176,7 @@ class BaseFlashingTrafficLightHTTP(BaseTrafficLightHTTP):
 
 class BaseStopSignTrafficLightHTTP(BaseTrafficLightHTTP):
     """Flashing reds after system crash; will repeat indefinitely"""
+
     red_flash_time: int = Field(default=1)
 
 
@@ -173,11 +191,11 @@ class BaseTrafficLightServiceLayerModel(abc.ABC):
         updated_at: datetime.datetime,
         supported_systems: List[SupportedSystem],
         supported_colors: List[SupportedColor],
+        supported_light_type: SupportedLightType,
         green_time: int,
         yellow_time: int,
         red_time: int,
         cycle_repeat_amount: Optional[int] = None,
-        repeat_indefinitely: Optional[bool] = True,
         signal_count: int = 0,
     ) -> None:
         self.id = id
@@ -185,19 +203,13 @@ class BaseTrafficLightServiceLayerModel(abc.ABC):
         self.updated_at = updated_at
         self.supported_systems = supported_systems
         self.supported_colors = supported_colors
+        self.supported_light_type = supported_light_type
         self.green_time = green_time
         self.yellow_time = yellow_time
         self.red_time = red_time
+        self.total_time: Optional[int] = None
         self.cycle_repeat_amount = cycle_repeat_amount
-        self.repeat_indefinitely = repeat_indefinitely
         self.signal_count = signal_count
-
-    @abc.abstractmethod
-    def get_total_signal_time(self) -> int:
-        """
-        Total time for all color durations
-        """
-        ...
 
     @abc.abstractmethod
     def get_color(self) -> SupportedColor:
@@ -240,8 +252,8 @@ class BaseTrafficLightServiceLayerModel(abc.ABC):
         Returns:
             int: modular count
         """
-        total_time = self.get_total_signal_time()
-        signal_count = self.signal_count
+        total_time = cast(int, self.total_time)
+        signal_count = cast(int, self.signal_count)
         mod_signal_count = signal_count % total_time
         return mod_signal_count
 
@@ -256,52 +268,60 @@ class TrafficLightServiceLayerModel(BaseTrafficLightServiceLayerModel):
         created_at: datetime.datetime = datetime.datetime.now(tz=datetime.timezone.utc),
         updated_at: datetime.datetime = datetime.datetime.now(tz=datetime.timezone.utc),
         supported_systems: List[SupportedSystem] = [SupportedSystem.TRAFFIC_LIGHT],
-        supported_colors: List[SupportedColor] = [SupportedColor.GREEN, SupportedColor.YELLOW, SupportedColor.RED],
+        supported_colors: List[SupportedColor] = [
+            SupportedColor.GREEN,
+            SupportedColor.YELLOW,
+            SupportedColor.RED,
+        ],
+        supported_light_type: SupportedLightType = SupportedLightType.STANDARD,
         green_time: int = 60,
         yellow_time: int = 6,
         red_time: int = 120,
         cycle_repeat_amount: Optional[int] = None,
-        repeat_indefinitely: Optional[bool] = True,
         signal_count: int = 0,
     ) -> None:
-        for color, timer in [("green_time", green_time), ("yellow_time", yellow_time), ("red_time", red_time)]:
+        for color, timer in [
+            ("green_time", green_time),
+            ("yellow_time", yellow_time),
+            ("red_time", red_time),
+        ]:
             if not isinstance(timer, int):
                 raise traffic_exceptions.TrafficLightValidationException(
-                    f'{color} must be an instance of int, but type {type(timer)} was passed.'
+                    f"{color} must be an instance of int, but type {type(timer)} was passed."
                 )
             if timer < 0:
                 raise traffic_exceptions.TrafficLightValidationException(
-                    f'{color} must be greater than zero, but {timer} was passed'
+                    f"{color} must be greater than zero, but {timer} was passed"
                 )
-        if green_time + yellow_time + red_time <= 0:
+        self.total_time = green_time + yellow_time + red_time
+        if self.total_time <= 0:
             raise traffic_exceptions.TrafficLightValidationException(
-                'total times for green, yellow, and red times must be greater than zero'
+                "total times for green, yellow, and red times must be greater than zero"
             )
         self.id = id
         self.created_at = created_at
         self.updated_at = updated_at
         self.supported_systems = supported_systems
         self.supported_colors = supported_colors
+        self.supported_light_type = supported_light_type
         self.green_time = green_time
         self.yellow_time = yellow_time
         self.red_time = red_time
         self.cycle_repeat_amount = cycle_repeat_amount
-        self.repeat_indefinitely = repeat_indefinitely
         self.signal_count = signal_count
 
     def get_modular_signal_count(self) -> int:
-        total_time = self.get_total_signal_time()
-        signal_count = self.signal_count
+        total_time = cast(int, self.total_time)
+        signal_count = cast(int, self.signal_count)
         mod_signal_count = signal_count % total_time
         return mod_signal_count
-
-    def get_total_signal_time(self) -> int:
-        return self.green_time + self.yellow_time + self.red_time
 
     def get_color(self) -> SupportedColor:
         green_range = range(self.green_time)
         yellow_range = range(self.green_time, self.green_time + self.yellow_time)
-        red_range = range(self.green_time + self.yellow_time, self.get_total_signal_time())
+        red_range = range(
+            self.green_time + self.yellow_time, cast(int, self.total_time)
+        )
         signal_count = self.signal_count
         mod_signal_count = self.get_modular_signal_count()
 
@@ -313,7 +333,7 @@ class TrafficLightServiceLayerModel(BaseTrafficLightServiceLayerModel):
             return SupportedColor.RED
         else:
             raise traffic_exceptions.TrafficLightValidationException(
-                f'Modular count fell outside of signal color ranges: signal_count = {signal_count}, mod_signal_count = {mod_signal_count}'
+                f"Modular count fell outside of signal color ranges: signal_count = {signal_count}, mod_signal_count = {mod_signal_count}"
             )
 
     def to_pydantic(self) -> BaseTrafficLightHTTP:
@@ -327,8 +347,7 @@ class TrafficLightServiceLayerModel(BaseTrafficLightServiceLayerModel):
             yellow_time=self.yellow_time,
             red_time=self.red_time,
             cycle_repeat_amount=self.cycle_repeat_amount,
-            repeat_indefinitely=self.repeat_indefinitely,
-            signal_count=self.signal_count
+            signal_count=self.signal_count,
         )
 
 
@@ -336,6 +355,7 @@ class FlashingTrafficLightServiceLayerModel(TrafficLightServiceLayerModel):
     """
     TODO: implement for flashing light extensibility at service layer
     """
+
     pass
 
 

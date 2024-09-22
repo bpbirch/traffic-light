@@ -19,6 +19,9 @@ fastapi = "0.109.2"
 uvicorn = "0.23.2"
 fastapi-pagination = "0.12.7"
 dependency-injector = "4.40.0"
+click = "8.1.7"
+keyboard = "^0.13.5"
+pynput = "^1.7.7"
 
 [tool.poetry.group.dev.dependencies]
 commitizen = "2.42.1"

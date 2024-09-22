@@ -4,8 +4,7 @@ import uuid
 
 
 async def upsert_traffic_light(
-    traffic_light: models.BaseTrafficLightHTTP,
-    uow: AbstractTrafficLightUnitOfWork
+    traffic_light: models.BaseTrafficLightHTTP, uow: AbstractTrafficLightUnitOfWork
 ) -> uuid.UUID:
     async with uow:
         sl_model = models.TrafficLightServiceLayerModel(**traffic_light.model_dump())
