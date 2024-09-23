@@ -24,6 +24,7 @@ pynput = "1.7.7"
 
 [tool.poetry.group.dev.dependencies]
 commitizen = "2.42.1"
+pre-commit = "3.8.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -44,7 +45,7 @@ flake8 = "6.0.0"
 pytest-cov = "4.1.0"
 
 [tool.taskipy.tasks]
-mypy = { cmd = "mypy --config-file mypy.ini --junit-xml _mypy.xml --show-traceback", help = "Run code quality tests" }
+mypy = { cmd = "mypy --config-file mypy.ini --show-traceback", help = "Run code quality tests" }
 flake8ci = { cmd = "flake8 traffic_light tests --format junit-xml --output-file flake8.xml --count", help = "Run code quality tests" }
 flake8 = { cmd = "flake8 traffic_light tests", help = "Run code quality tests" }
 autoflake = { cmd = "autoflake --in-place --remove-all-unused-imports --remove-unused-variables --ignore-pass-statements --ignore-init-module-imports --recursive traffic_light tests", help = "Run autoflake tool" }

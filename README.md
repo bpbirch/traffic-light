@@ -60,6 +60,8 @@ You can exit the program at any time by entering 'q' (you must hit enter during 
 Once you have entered valid inputs, such as 1, 1, 1, for green_time, yellow_time, and red_time, you will see a display of a traffic light, which will either cycle indefinitely if you chose Y in the original prompt for indefinite cycle repeats:
 
 example output:
+
+```
        ***
    ** ****** **
  * ************ *
@@ -88,6 +90,7 @@ example output:
  * ************ *
    ** ****** **
        ***
+```
 
 Regardless of whether you chose for the lights to cycle indefinitely or not, you can exit the light display loop at any time by pressing 'q'
 

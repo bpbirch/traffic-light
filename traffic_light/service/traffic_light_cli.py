@@ -36,7 +36,9 @@ def validate_color_inputs(value: str, param_name: str) -> int:
     return val
 
 
-@click.command(help="Simulates a traffic light sequence. You can enter non-negative integer durations for green, yellow, and red lights. Total for all times must be greater than zero")
+@click.command(
+    help="Simulates a traffic light sequence. You can enter non-negative integer durations for green, yellow, and red lights. Total for all times must be greater than zero"
+)
 def run_traffic_light() -> None:  # noqa: C901
     global EXIT_PROGRAM
     exit_message = "Exiting Traffic Light Simulator"
