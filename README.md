@@ -26,6 +26,8 @@ Writing code in this way allows us to decouple our application logic and databas
 I understand that a lot of this code was out of scope for the project, but I believe that it provides a very good example of design patterns I use, and allows for extensibility, which was a requirement of the assignment. In terms of extensibility, I wanted to make sure that this code could be used as a web-based microservice in the future, but I also wanted to ensure that the code and CLI could be used for more than traffic lights. For instance, the CLI, and the TrafficLightHandler that is instantiated within the CLI's main function, could both be extended very easily to handle non-standard traffic lights.
 
 ## Installation
+NOTE: All of the following commands should be run from the root of the project!
+
 This application was written as a poetry project, but users can also use pip for isntallation. For either approach, you should have virtualenv installed on your machine. Follow steps below to install dependencies.
 
 ### create your virtual environment
@@ -63,6 +65,8 @@ Now your dependencies are installed in your virtual environment
 The usage for this application is currently supported via the CLI tool. The project was designed to be extensible as a FastAPI web application / microservice as well. Please see the section on [running the cli](#running-the-cli) for usage instructions for the CLI tool.
 
 ## Running the CLI
+NOTE: All of the following commands should be run from the root of the project!
+
 A quick note for developers who are curious: the source code that is immediately used by the CLI is located at traffic_light/service/traffic_light_cli.yp
 
 For help instructions regarding CLI usage, you can run:
@@ -124,6 +128,8 @@ Tests run in a github action when merging to main or dev. Please see .github/wor
 This project was built as a poetry project, using commitizen for pre-commit hooks for code quality and type hinting. As part of our pre-commit hooks, we also ensure that our pyproject.toml dependencies are written to requirements.txt, so that developers not using poetry can still run the program and tests. Poetry tasks for mypy, flake8, etc. can be found in pyproject.toml under tool.taskipy.task
 
 ### Development
+NOTE: All of the following commands should be run from the root of the project!
+
 This project uses pre-commit and commitizen for commit hooks (code quality, formatting, etc.). We use mypy for type checking, flake8 for linting, and black for formatting. We run pre-commit hooks with those tools when we commit, by using commitizen. Commitizen is also used for semantic versioning. The following steps should be followed for commits.
 
 First, make sure you have pre-commit hooks installed:
@@ -141,6 +147,8 @@ Then, when commiting, instead of running git commit, you should run:
 You will then be prompted to specify breaking changes and provide a commit message. Then, before being checked in to remote, pre commit hooks will run that check mypy, flake8, black, and also copy our pyproject.toml file dependencies to requirements.txt, so that dependencies stay in sync for poetry and non poetry developers.
 
 ### Testing
+NOTE: All of the following commands should be run from the root of the project!
+
 To run all tests from a poetry environment, tests can be run with printed output, or without printed output. 
 
 To run tests without printed output:
