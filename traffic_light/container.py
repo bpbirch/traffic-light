@@ -1,7 +1,8 @@
+from dependency_injector import containers, providers
+
+from traffic_light.adapters.repositories.in_memory import InMemoryTrafficLightRepository
 from traffic_light.adapters.repositories.protocols import TrafficLightRepository
 from traffic_light.config.configuration import settings
-from dependency_injector import containers, providers
-from traffic_light.adapters.repositories.in_memory import InMemoryTrafficLightRepository
 from traffic_light.service.unit_of_work import InMemoryUnitOfWork
 
 

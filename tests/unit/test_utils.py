@@ -1,4 +1,5 @@
 from unittest import IsolatedAsyncioTestCase
+
 from traffic_light.container import ContainerSingleton
 
 

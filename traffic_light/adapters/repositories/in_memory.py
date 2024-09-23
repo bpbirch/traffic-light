@@ -1,8 +1,9 @@
-from traffic_light.adapters.repositories.protocols import TrafficLightRepository
-import traffic_light.domain.models as models
 import uuid
 from typing import Dict
+
 import traffic_light.domain.exceptions as traffic_exceptions
+import traffic_light.domain.models as models
+from traffic_light.adapters.repositories.protocols import TrafficLightRepository
 
 
 class InMemoryTrafficLightRepository(TrafficLightRepository):

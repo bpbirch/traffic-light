@@ -1,9 +1,11 @@
 import abc
-from pydantic import BaseModel, ConfigDict, Field, model_validator
-from enum import Enum
-from typing import Any, List, Optional, cast
 import datetime
 import uuid
+from enum import Enum
+from typing import Any, List, Optional, cast
+
+from pydantic import BaseModel, ConfigDict, Field, model_validator
+
 import traffic_light.domain.exceptions as traffic_exceptions
 
 

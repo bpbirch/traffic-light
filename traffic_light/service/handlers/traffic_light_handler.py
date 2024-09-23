@@ -1,7 +1,7 @@
-import traffic_light.domain.exceptions as traffic_exceptions
-from traffic_light.domain import models
 import click
 
+import traffic_light.domain.exceptions as traffic_exceptions
+from traffic_light.domain import models
 
 LIGHT_CIRCLE = """
        ***

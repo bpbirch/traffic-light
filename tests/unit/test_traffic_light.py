@@ -1,7 +1,7 @@
-from tests.unit.test_utils import TrafficLightTestCaseWithContainerSingleton
+import traffic_light.domain.exceptions as traffic_exceptions
 import traffic_light.domain.models as models
 import traffic_light.service.traffic_light as traffic_service_layer
-import traffic_light.domain.exceptions as traffic_exceptions
+from tests.unit.test_utils import TrafficLightTestCaseWithContainerSingleton
 
 
 class TrafficLightUnitTestCase(TrafficLightTestCaseWithContainerSingleton):

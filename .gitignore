@@ -5,3 +5,5 @@
 **__pycache__**
 **.cache/v/cache
 **.mypy_cache
+
+**.venv**

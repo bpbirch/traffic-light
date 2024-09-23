@@ -1,12 +1,14 @@
-from typing import cast
-import traffic_light.domain.models as models
-import click
 import time
-from traffic_light.service.handlers.traffic_light_handler import TrafficLightHandler
+from typing import Any, cast
+
+import click
 from pynput import keyboard
-from typing import Any
+
+import traffic_light.domain.models as models
+from traffic_light.service.handlers.traffic_light_handler import TrafficLightHandler
 
 EXIT_PROGRAM = False
+EXIT_MESSAGE = "Exiting Traffic Light Simulator"
 
 
 def on_press(key: Any) -> None:
@@ -37,11 +39,10 @@ def validate_color_inputs(value: str, param_name: str) -> int:
 
 
 @click.command(
-    help="Simulates a traffic light sequence. You can enter non-negative integer durations for green, yellow, and red lights. Total for all times must be greater than zero"
+    help=f"Simulates a traffic light sequence. You can enter non-negative integer durations for green, yellow, and red lights. Total for all times must be greater than zero (so 1, 0, 0 would be a valid input for green, yellow, red, but 0, 0, 0 would not be). If you enter q during color time prompts, then the program will be exited. If you press q during the light display, the program will be exited. Upon exit, '{EXIT_MESSAGE}' will be printed to your terminal. If you enter a non-negative integer that is not q during color time prompting, you will be prompted to re-enter a non-negative integer. \n\nAfter color time prompts, you will be prompted to select whether you want the light display to be displayed indefinitely on repeat. The answer to that prompt defaults to Y/yes, which will cause the display to cycle indefinitley until the user presses q. If the user chooses n, then the light will go through one cycle, and then the program will exit."
 )
 def run_traffic_light() -> None:  # noqa: C901
     global EXIT_PROGRAM
-    exit_message = "Exiting Traffic Light Simulator"
     click.echo("\nEnter q to exit at any time.\n")
     listen_for_exit()
 
@@ -61,7 +62,7 @@ def run_traffic_light() -> None:  # noqa: C901
                     "Enter the number of seconds for the green light", type=str
                 )
                 if green_time_input.lower() == "q":
-                    click.echo(exit_message)
+                    click.echo(EXIT_MESSAGE)
                     return
                 green_time = validate_color_inputs(green_time_input, "Green time")
 
@@ -70,7 +71,7 @@ def run_traffic_light() -> None:  # noqa: C901
                     "Enter the number of seconds for the yellow light", type=str
                 )
                 if yellow_time_input.lower() == "q":
-                    click.echo(exit_message)
+                    click.echo(EXIT_MESSAGE)
                     return
                 yellow_time = validate_color_inputs(yellow_time_input, "Yellow time")
 
@@ -79,7 +80,7 @@ def run_traffic_light() -> None:  # noqa: C901
                     "Enter the number of seconds for the red light", type=str
                 )
                 if red_time_input.lower() == "q":
-                    click.echo(exit_message)
+                    click.echo(EXIT_MESSAGE)
                     return
                 red_time = validate_color_inputs(red_time_input, "Red time")
 
@@ -133,8 +134,9 @@ def run_traffic_light() -> None:  # noqa: C901
         if repeat_indefinitely:
             while True:
                 if EXIT_PROGRAM:
-                    click.echo(exit_message)
-                    break
+                    click.clear()
+                    click.echo(EXIT_MESSAGE)
+                    return
                 click.clear()
                 displayed = traffic_light_handler.get_display()
                 traffic_light.increment_signal_count()
@@ -143,17 +145,18 @@ def run_traffic_light() -> None:  # noqa: C901
         else:
             for _ in range(cast(int, traffic_light.total_time)):
                 if EXIT_PROGRAM:
-                    click.echo(exit_message)
-                    break
+                    click.clear()
+                    click.echo(EXIT_MESSAGE)
+                    return
                 click.clear()
                 displayed = traffic_light_handler.get_display()
                 traffic_light.increment_signal_count()
                 click.echo(displayed)
                 time.sleep(1)
             click.clear()
-            click.echo(exit_message)
+            click.echo(EXIT_MESSAGE)
 
     except Exception as exc:
         click.echo(
-            f"An error was encountered. {exit_message} with exception {str(exc)}"
+            f"An error was encountered. {EXIT_MESSAGE} with exception {str(exc)}"
         )

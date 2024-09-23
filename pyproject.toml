@@ -51,7 +51,8 @@ flake8 = { cmd = "flake8 traffic_light tests", help = "Run code quality tests" }
 autoflake = { cmd = "autoflake --in-place --remove-all-unused-imports --remove-unused-variables --ignore-pass-statements --ignore-init-module-imports --recursive traffic_light tests", help = "Run autoflake tool" }
 isort = { cmd = "isort traffic_light tests", help = "Sort imports" }
 format = { cmd = "black traffic_light tests", help = "Run black code formatting" }
-tests = { cmd = "pytest -s tests", help = "run pytest tests"}
+tests = { cmd = "pytest tests", help = "run pytest tests"}
+tests_verbose = { cmd = "pytest -s tests", help = "run pytest tests"}
 unit = { cmd = "pytest -s tests/unit", help = "run pytest unit tests" }
 e2e = { cmd = "pytest -s tests/e2e", help = "run pytest e2e tests" }
 int = { cmd = "pytest -s tests/integration", help = "run pytest integration tests" }

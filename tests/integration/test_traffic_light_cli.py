@@ -1,9 +1,11 @@
+from unittest import TestCase
+
 from click.testing import CliRunner
+
+from traffic_light.service.handlers.traffic_light_handler import LIGHT_CIRCLE
 from traffic_light.service.traffic_light_cli import (
     run_traffic_light,
 )  # Adjust the import to your module's name
-from unittest import TestCase
-from traffic_light.service.handlers.traffic_light_handler import LIGHT_CIRCLE
 
 
 class ClickCLITestCast(TestCase):

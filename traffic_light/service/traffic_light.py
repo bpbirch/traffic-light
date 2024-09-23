@@ -1,6 +1,7 @@
+import uuid
+
 import traffic_light.domain.models as models
 from traffic_light.service.unit_of_work import AbstractTrafficLightUnitOfWork
-import uuid
 
 
 async def upsert_traffic_light(

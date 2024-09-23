@@ -1,6 +1,7 @@
-from typing import Protocol, runtime_checkable
-import traffic_light.domain.models as models
 import uuid
+from typing import Protocol, runtime_checkable
+
+import traffic_light.domain.models as models
 
 
 # BEGIN write repository

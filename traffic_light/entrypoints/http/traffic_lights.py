@@ -1,13 +1,13 @@
+import uuid
+
 from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends, Request
 
-from traffic_light.service.unit_of_work import AbstractTrafficLightUnitOfWork
-from traffic_light.container import Container
+import traffic_light.domain.exceptions as traffic_exceptions
 import traffic_light.domain.models as models
 import traffic_light.service.traffic_light as traffic_service_layer
-import traffic_light.domain.exceptions as traffic_exceptions
-import uuid
-
+from traffic_light.container import Container
+from traffic_light.service.unit_of_work import AbstractTrafficLightUnitOfWork
 
 agents_router = APIRouter(
     prefix="/traffic-lights",
