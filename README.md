@@ -11,7 +11,6 @@
     - [Testing](#testing)
 
 ## Introduction
-Before getting into any 
 This application provides a simple command-line interface CLI to set traffic light times, and provide a graphical display in ASCII characters of a traffic light, with light colors displayed for their respective times. Although this project's main entry point is currently a CLI tool, the project was also designed to be extensible as a web application, using FastAPI. So if we wanted the light interface to be consumed via http requests, we could easily implement a lightweight UI, and deploy this application to a cloud environment.
 
 The goal of this project was primarily to write a CLI tool, but also to write code with an eye to readability and extensibility, while also writing code that is representative of my engineering habits and capabilities. For extensibility, I wrote the project as a FastAPI project, using a combination of repository/unit of work, dependency injection, and inversion of control patterns. Regarding those patterns, the code base comports with the following structure:
@@ -67,7 +66,7 @@ The usage for this application is currently supported via the CLI tool. The proj
 ## Running the CLI
 NOTE: All of the following commands should be run from the root of the project!
 
-A quick note for developers who are curious: the source code that is immediately used by the CLI is located at traffic_light/service/traffic_light_cli.yp
+A quick note for developers who are curious: the source code that is immediately used by the CLI is located at traffic_light/service/traffic_light_cli.py
 
 For help instructions regarding CLI usage, you can run:
 

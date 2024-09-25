@@ -20,4 +20,4 @@ async def get_traffic_light(
 ) -> models.BaseTrafficLightHTTP:
     async with uow:
         sl_model = await uow.traffic_light_repository.get_traffic_light(light_id)
-        return sl_model.to_pydantic()
+        return sl_model.to_http_model()

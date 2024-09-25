@@ -221,7 +221,7 @@ class BaseTrafficLightServiceLayerModel(abc.ABC):
         ...
 
     @abc.abstractmethod
-    def to_pydantic(self) -> BaseTrafficLightHTTP:
+    def to_http_model(self) -> BaseTrafficLightHTTP:
         """
         Return the analogous http pydantic model from the service layer instance
         """
@@ -338,7 +338,7 @@ class TrafficLightServiceLayerModel(BaseTrafficLightServiceLayerModel):
                 f"Modular count fell outside of signal color ranges: signal_count = {signal_count}, mod_signal_count = {mod_signal_count}"
             )
 
-    def to_pydantic(self) -> BaseTrafficLightHTTP:
+    def to_http_model(self) -> BaseTrafficLightHTTP:
         return BaseTrafficLightHTTP(
             id=self.id,
             created_at=self.created_at,
