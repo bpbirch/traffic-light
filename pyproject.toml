@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "traffic-light"
 version = "0.1.0"
-description = "Traffic light coding exercise for Comcast-Databee"
+description = "Traffic light simulator"
 authors = ["bpbirch <brendanpbirch@gmail.com>"]
 license = "MIT"
 readme = "README.md"

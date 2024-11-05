@@ -11,7 +11,7 @@
     - [Testing](#testing)
 
 ## Introduction
-This application provides a simple command-line interface CLI to set traffic light times, and provide a graphical display in ASCII characters of a traffic light, with light colors displayed for their respective times. Although this project's main entry point is currently a CLI tool, the project was also designed to be extensible as a web application, using FastAPI. So if we wanted the light interface to be consumed via http requests, we could easily implement a lightweight UI, and deploy this application to a cloud environment.
+This application provides a simple command-line interface CLI to set traffic light times, and provide a graphical display in ASCII characters of a traffic light, with light colors displayed for their respective times. Although this project's main entry point is currently a CLI tool, the project was also designed to be extensible as a web application, using FastAPI. So if we wanted the light interface to be consumed via http requests, we could easily implement a lightweight UI, and deploy this application to a cloud environment. The idea here is that io is a detail, not a policy. The policies/business rules are contained in the domain and service layer, while the details (io, database, framework) all depend on policies. This means that the project is structured in a way that the database can easily be swapped, and a different io model can be introduced, without breaking the service layer / policies.
 
 The goal of this project was primarily to write a CLI tool, but also to write code with an eye to readability and extensibility, while also writing code that is representative of my engineering habits and capabilities. For extensibility, I wrote the project as a FastAPI project, using a combination of repository/unit of work, dependency injection, and inversion of control patterns. Regarding those patterns, the code base comports with the following structure:
 
@@ -22,12 +22,10 @@ The goal of this project was primarily to write a CLI tool, but also to write co
 
 Writing code in this way allows us to decouple our application logic and database logic. Also, using dependency injection (particularly our injected unit of work) allows us to significantly reduce the size of our E2E tests in our test pyramid, because we can convert quite a few E2E tests to unit tests, by simply testing that the service layer is behaving well, while using an in-memory database.
 
-I understand that a lot of this code was out of scope for the project, but I believe that it provides a very good example of design patterns I use, and allows for extensibility, which was a requirement of the assignment. In terms of extensibility, I wanted to make sure that this code could be used as a web-based microservice in the future, but I also wanted to ensure that the code and CLI could be used for more than traffic lights. For instance, the CLI, and the TrafficLightHandler that is instantiated within the CLI's main function, could both be extended very easily to handle non-standard traffic lights.
-
 ## Installation
 NOTE: All of the following commands should be run from the root of the project!
 
-This application was written as a poetry project, but users can also use pip for isntallation. For either approach, you should have virtualenv installed on your machine. Follow steps below to install dependencies.
+This application was written as a poetry project, but users can also use pip for installation. For either approach, you should have virtualenv installed on your machine. Follow steps below to install dependencies.
 
 ### create your virtual environment
 From the root of the project, first create a virtual environment:

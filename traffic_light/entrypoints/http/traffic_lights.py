@@ -9,13 +9,13 @@ import traffic_light.service.traffic_light as traffic_service_layer
 from traffic_light.container import Container
 from traffic_light.service.unit_of_work import AbstractTrafficLightUnitOfWork
 
-agents_router = APIRouter(
+lights_router = APIRouter(
     prefix="/traffic-lights",
     tags=["traffic-lights"],
 )
 
 
-@agents_router.post("/")
+@lights_router.post("/")
 @inject
 async def upsert_traffic_light(
     request: Request,  # the request param will get used if we want to introduce an auth decorator
@@ -32,7 +32,7 @@ async def upsert_traffic_light(
         )
 
 
-@agents_router.get("/{light_id}")
+@lights_router.get("/{light_id}")
 @inject
 async def get_traffic_light(
     request: Request,  # the request param will get used if we want to introduce an auth decorator
