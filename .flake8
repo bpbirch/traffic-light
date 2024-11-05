@@ -1,0 +1,31 @@
+[flake8]
+# E203: Whitespace before ':'
+# W503: Line break before binary operator
+# W504: W503 counterpart
+# E203/W503/W504 see: https://black.readthedocs.io/en/stable/faq.html#why-are-flake8-s-e203-and-w503-violated
+# E501: Line too long
+
+# review and address the security concerns: S104, S303, S413
+# S104: Possible binding to all interfaces.
+# S303: Use of insecure MD2, MD4, MD5, or SHA1 hash function.
+# S413: The pyCrypto library and its module keccak are no longer actively maintained and have been deprecated.
+#       Consider using pyca/cryptography library.
+extend-ignore = E203, W503, E501
+extend-select = W504
+
+# F401 Module imported but unused
+# F402 module level import not at top of file
+# F403 'from event.raw_sql import *' used; unable to detect undefined names
+# F405 may be undefined, or defined from star imports
+# W291 trailing whitespace
+per-file-ignores =
+    # ignore asserts in tests
+    tests/*: S101 S311 S106
+
+max-line-length = 120
+
+# According to McCabe, anything that goes beyond 10 is too complex
+max-complexity = 18
+
+# ignore specific files during flake8 runs
+exclude = .venv, .git, __pycache__, */migrations/*
